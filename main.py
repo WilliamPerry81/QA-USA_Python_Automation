@@ -1,6 +1,7 @@
 import data
 import helpers
 
+
 class TestUrbanRoutes:
     @classmethod
     def setup_class(cls):
@@ -18,7 +19,6 @@ class TestUrbanRoutes:
         # add in s8
         print("test_select_plan")
         pass
-
 
     def test_fill_phone_number(self):
         # add in s8
@@ -55,17 +55,3 @@ def test_order_2_ice_creams():
     for i in range(2):  # Loop will iterate twice
         # Add in S8
         pass  # Placeholder for future code
-
-
-
-
-
-
-
-
-
-
-
-
-
-
