@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>helpers.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #7a7e85;}
+.s1 { color: #bcbec4;}
+.s2 { color: #cf8e6d;}
+.s3 { color: #bcbec4;}
+.s4 { color: #5f826b; font-style: italic;}
+.s5 { color: #2aacb8;}
+.s6 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+helpers.py</font>
+</center></td></tr></table>
+<pre><span class="s0"># Retrieves Phone code. Do not change</span>
+<span class="s0"># File should be completely unchanged</span>
+
+<span class="s2">def </span><span class="s1">retrieve_phone_code</span><span class="s3">(</span><span class="s1">driver</span><span class="s3">) </span><span class="s1">-&gt; str</span><span class="s3">:</span>
+    <span class="s4">&quot;&quot;&quot;This code retrieves phone confirmation number and returns it as a string. 
+    Use it when application waits for the confirmation code to pass it into your tests. 
+    The phone confirmation code can only be obtained after it was requested in application.&quot;&quot;&quot;</span>
+
+    <span class="s2">import </span><span class="s1">json</span>
+    <span class="s2">import </span><span class="s1">time</span>
+    <span class="s2">from </span><span class="s1">selenium</span><span class="s3">.</span><span class="s1">common </span><span class="s2">import </span><span class="s1">WebDriverException</span>
+    <span class="s1">code </span><span class="s3">= </span><span class="s2">None</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range</span><span class="s3">(</span><span class="s5">10</span><span class="s3">):</span>
+        <span class="s2">try</span><span class="s3">:</span>
+            <span class="s1">logs </span><span class="s3">= [</span><span class="s1">log</span><span class="s3">[</span><span class="s6">&quot;message&quot;</span><span class="s3">] </span><span class="s2">for </span><span class="s1">log </span><span class="s2">in </span><span class="s1">driver</span><span class="s3">.</span><span class="s1">get_log</span><span class="s3">(</span><span class="s6">'performance'</span><span class="s3">) </span><span class="s2">if </span><span class="s1">log</span><span class="s3">.</span><span class="s1">get</span><span class="s3">(</span><span class="s6">&quot;message&quot;</span><span class="s3">)</span>
+                    <span class="s2">and </span><span class="s6">'api/v1/number?number' </span><span class="s2">in </span><span class="s1">log</span><span class="s3">.</span><span class="s1">get</span><span class="s3">(</span><span class="s6">&quot;message&quot;</span><span class="s3">)]</span>
+            <span class="s2">for </span><span class="s1">log </span><span class="s2">in </span><span class="s1">reversed</span><span class="s3">(</span><span class="s1">logs</span><span class="s3">):</span>
+                <span class="s1">message_data </span><span class="s3">= </span><span class="s1">json</span><span class="s3">.</span><span class="s1">loads</span><span class="s3">(</span><span class="s1">log</span><span class="s3">)[</span><span class="s6">&quot;message&quot;</span><span class="s3">]</span>
+                <span class="s1">body </span><span class="s3">= </span><span class="s1">driver</span><span class="s3">.</span><span class="s1">execute_cdp_cmd</span><span class="s3">(</span><span class="s6">'Network.getResponseBody'</span><span class="s3">,</span>
+                                              <span class="s3">{</span><span class="s6">'requestId'</span><span class="s3">: </span><span class="s1">message_data</span><span class="s3">[</span><span class="s6">&quot;params&quot;</span><span class="s3">][</span><span class="s6">&quot;requestId&quot;</span><span class="s3">]})</span>
+                <span class="s1">code </span><span class="s3">= </span><span class="s6">''</span><span class="s3">.</span><span class="s1">join</span><span class="s3">([</span><span class="s1">x </span><span class="s2">for </span><span class="s1">x </span><span class="s2">in </span><span class="s1">body</span><span class="s3">[</span><span class="s6">'body'</span><span class="s3">] </span><span class="s2">if </span><span class="s1">x</span><span class="s3">.</span><span class="s1">isdigit</span><span class="s3">()])</span>
+        <span class="s2">except </span><span class="s1">WebDriverException</span><span class="s3">:</span>
+            <span class="s1">time</span><span class="s3">.</span><span class="s1">sleep</span><span class="s3">(</span><span class="s5">1</span><span class="s3">)</span>
+            <span class="s2">continue</span>
+        <span class="s2">if not </span><span class="s1">code</span><span class="s3">:</span>
+            <span class="s2">raise </span><span class="s1">Exception</span><span class="s3">(</span><span class="s6">&quot;No phone confirmation code found.</span><span class="s2">\n</span><span class="s6">&quot;</span>
+                            <span class="s6">&quot;Please use retrieve_phone_code only after the code was requested in your application.&quot;</span><span class="s3">)</span>
+        <span class="s2">return </span><span class="s1">code</span>
+
+<span class="s0"># Checks if Routes is up and running. Do not change</span>
+<span class="s2">def </span><span class="s1">is_url_reachable</span><span class="s3">(</span><span class="s1">url</span><span class="s3">):</span>
+    <span class="s4">&quot;&quot;&quot;Check if the URL can be reached. Pass the URL for Urban Routes as a parameter. 
+    If it can be reached, it returns True, otherwise it returns False&quot;&quot;&quot;</span>
+
+    <span class="s2">import </span><span class="s1">ssl</span>
+    <span class="s2">import </span><span class="s1">urllib</span><span class="s3">.</span><span class="s1">request</span>
+
+    <span class="s2">try</span><span class="s3">:</span>
+        <span class="s1">ssl_ctx </span><span class="s3">= </span><span class="s1">ssl</span><span class="s3">.</span><span class="s1">create_default_context</span><span class="s3">()</span>
+        <span class="s1">ssl_ctx</span><span class="s3">.</span><span class="s1">check_hostname </span><span class="s3">= </span><span class="s2">False</span>
+        <span class="s1">ssl_ctx</span><span class="s3">.</span><span class="s1">verify_mode </span><span class="s3">= </span><span class="s1">ssl</span><span class="s3">.</span><span class="s1">CERT_NONE</span>
+
+        <span class="s2">with </span><span class="s1">urllib</span><span class="s3">.</span><span class="s1">request</span><span class="s3">.</span><span class="s1">urlopen</span><span class="s3">(</span><span class="s1">url</span><span class="s3">, </span><span class="s1">context</span><span class="s3">=</span><span class="s1">ssl_ctx</span><span class="s3">) </span><span class="s2">as </span><span class="s1">response</span><span class="s3">:</span>
+            <span class="s0"># print(&quot;Response Status Code:&quot;, response.status) #for debugging purposes</span>
+            <span class="s2">if </span><span class="s1">response</span><span class="s3">.</span><span class="s1">status </span><span class="s3">== </span><span class="s5">200</span><span class="s3">:</span>
+                 <span class="s2">return True</span>
+            <span class="s2">else</span><span class="s3">:</span>
+                <span class="s2">return False</span>
+    <span class="s2">except </span><span class="s1">Exception </span><span class="s2">as </span><span class="s1">e</span><span class="s3">:</span>
+        <span class="s1">print </span><span class="s3">(</span><span class="s1">e</span><span class="s3">)</span>
+
+    <span class="s2">return False</span>
+</pre>
+</body>
+</html>

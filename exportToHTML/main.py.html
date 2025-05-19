@@ -1,0 +1,128 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">selenium </span><span class="s0">import </span><span class="s1">webdriver</span>
+<span class="s0">import </span><span class="s1">data</span>
+<span class="s0">import </span><span class="s1">helpers</span>
+<span class="s0">from </span><span class="s1">pages </span><span class="s0">import </span><span class="s1">UrbanRoutesPage</span>
+<span class="s0">import </span><span class="s1">time</span>
+
+<span class="s0">class </span><span class="s1">TestUrbanRoutes</span><span class="s2">:</span>
+
+
+    <span class="s2">@</span><span class="s1">classmethod</span>
+    <span class="s0">def </span><span class="s1">setup_class</span><span class="s2">(</span><span class="s1">cls</span><span class="s2">):</span>
+        <span class="s0">from </span><span class="s1">selenium</span><span class="s2">.</span><span class="s1">webdriver </span><span class="s0">import </span><span class="s1">DesiredCapabilities</span>
+        <span class="s1">capabilities </span><span class="s2">= </span><span class="s1">DesiredCapabilities</span><span class="s2">.</span><span class="s1">CHROME</span>
+        <span class="s1">capabilities</span><span class="s2">[</span><span class="s3">&quot;goog:loggingPrefs&quot;</span><span class="s2">] = {</span><span class="s3">'performance'</span><span class="s2">: </span><span class="s3">'ALL'</span><span class="s2">}</span>
+        <span class="s1">cls</span><span class="s2">.</span><span class="s1">driver </span><span class="s2">= </span><span class="s1">webdriver</span><span class="s2">.</span><span class="s1">Chrome</span><span class="s2">()</span>
+        <span class="s0">if </span><span class="s1">helpers</span><span class="s2">.</span><span class="s1">is_url_reachable</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">):</span>
+            <span class="s1">print</span><span class="s2">(</span><span class="s3">&quot;Connected to the Urban Routes server&quot;</span><span class="s2">)</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">print</span><span class="s2">(</span><span class="s3">&quot;Cannot connect to Urban Routes. Check the server is on and still running&quot;</span><span class="s2">)</span>
+
+
+    <span class="s0">def </span><span class="s1">test_set_route</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_from</span><span class="s2">() == </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_to</span><span class="s2">() == </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span>
+
+    <span class="s0">def </span><span class="s1">test_select_plan</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">selective_supportive_plan</span><span class="s2">()</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_supportive_class</span><span class="s2">() == </span><span class="s3">'tcard active'</span>
+
+    <span class="s0">def </span><span class="s1">test_fill_phone_number</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">2</span><span class="s2">)</span>
+        <span class="s1">phone_number </span><span class="s2">= </span><span class="s1">data</span><span class="s2">.</span><span class="s1">PHONE_NUMBER</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">fill_phone_number</span><span class="s2">(</span><span class="s1">phone_number</span><span class="s2">)</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_phone</span><span class="s2">() == </span><span class="s1">phone_number</span>
+
+    <span class="s0">def </span><span class="s1">test_fill_card</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">1</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_payment_method</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">add_card_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">add_card_number</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">CARD_NUMBER</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">add_code_number</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">CARD_CODE</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_link_card_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_close_payment_button</span><span class="s2">()</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_current_payment_method</span><span class="s2">() == </span><span class="s3">'Card'</span>
+
+    <span class="s0">def </span><span class="s1">test_comment_for_driver</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">message_to_the_driver </span><span class="s2">= </span><span class="s1">data</span><span class="s2">.</span><span class="s1">MESSAGE_FOR_DRIVER</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_message_to_the_driver</span><span class="s2">(</span><span class="s1">message_to_the_driver</span><span class="s2">)</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_message_to_driver</span><span class="s2">() == </span><span class="s1">message_to_the_driver</span>
+
+    <span class="s0">def </span><span class="s1">test_order_blanket_and_handkerchiefs</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">selective_supportive_plan</span><span class="s2">()</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">2</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_blanket_and_handkerchiefs_locator</span><span class="s2">()</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_blanket_and_handkerchiefs_verification</span><span class="s2">() == </span><span class="s0">True</span>
+
+
+    <span class="s0">def </span><span class="s1">test_order_2_ice_creams</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">maximize_window</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">selective_supportive_plan</span><span class="s2">()</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">2</span><span class="s2">)</span>
+        <span class="s1">number_of_ice_creams </span><span class="s2">= </span><span class="s4">2</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">add_ice_cream</span><span class="s2">(</span><span class="s1">number_of_ice_creams</span><span class="s2">)</span>
+        <span class="s0">assert </span><span class="s1">routes_page</span><span class="s2">.</span><span class="s1">get_ice_cream_added_number</span><span class="s2">() == </span><span class="s4">2</span>
+
+
+    <span class="s0">def </span><span class="s1">test_car_search_model_appears</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">URBAN_ROUTES_URL</span><span class="s2">)</span>
+        <span class="s1">routes_page </span><span class="s2">= </span><span class="s1">UrbanRoutesPage</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">set_route</span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_FROM</span><span class="s2">, </span><span class="s1">data</span><span class="s2">.</span><span class="s1">ADDRESS_TO</span><span class="s2">)</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">2</span><span class="s2">)</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">selective_supportive_plan</span><span class="s2">()</span>
+        <span class="s1">message_to_the_driver </span><span class="s2">= </span><span class="s1">data</span><span class="s2">.</span><span class="s1">MESSAGE_FOR_DRIVER</span>
+        <span class="s1">routes_page</span><span class="s2">.</span><span class="s1">click_message_to_the_driver</span><span class="s2">(</span><span class="s1">message_to_the_driver</span><span class="s2">)</span>
+
+
+    <span class="s2">@</span><span class="s1">classmethod</span>
+    <span class="s0">def </span><span class="s1">teardown_class</span><span class="s2">(</span><span class="s1">cls</span><span class="s2">):</span>
+        <span class="s1">cls</span><span class="s2">.</span><span class="s1">driver</span><span class="s2">.</span><span class="s1">quit</span><span class="s2">()</span>
+</pre>
+</body>
+</html>

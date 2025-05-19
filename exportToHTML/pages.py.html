@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>pages.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #cf8e6d;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+pages.py</font>
+</center></td></tr></table>
+<pre>
+
+<span class="s1">from </span><span class="s0">selenium</span><span class="s2">.</span><span class="s0">webdriver</span><span class="s2">.</span><span class="s0">common</span><span class="s2">.</span><span class="s0">by </span><span class="s1">import </span><span class="s0">By</span>
+<span class="s1">from </span><span class="s0">selenium</span><span class="s2">.</span><span class="s0">webdriver</span><span class="s2">.</span><span class="s0">support </span><span class="s1">import </span><span class="s0">expected_conditions</span>
+<span class="s1">from </span><span class="s0">selenium</span><span class="s2">.</span><span class="s0">webdriver</span><span class="s2">.</span><span class="s0">support</span><span class="s2">.</span><span class="s0">wait </span><span class="s1">import </span><span class="s0">WebDriverWait</span>
+<span class="s1">from </span><span class="s0">helpers </span><span class="s1">import </span><span class="s0">retrieve_phone_code</span>
+
+<span class="s1">from </span><span class="s0">selenium</span><span class="s2">.</span><span class="s0">webdriver </span><span class="s1">import </span><span class="s0">Keys</span>
+
+
+<span class="s1">class </span><span class="s0">UrbanRoutesPage</span><span class="s2">:</span>
+    <span class="s0">from_field </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'from'</span><span class="s2">)</span>
+    <span class="s0">to_field </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'to'</span><span class="s2">)</span>
+
+
+    <span class="s0">supportive_plan_card </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[text()=&quot;Supportive&quot;]/..'</span><span class="s2">)</span>
+    <span class="s0">get_supportive_plan_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[contains(text(), &quot;Supportive&quot;)]'</span><span class="s2">)</span>
+    <span class="s0">call_taxi_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//button[contains(text(), &quot;Call a taxi&quot;)]'</span><span class="s2">)</span>
+    <span class="s0">custom_option_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@text()=&quot;custom&quot;'</span><span class="s2">)</span>
+    <span class="s0">phone_number_button_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@class=&quot;np-button&quot;]//div[contains(text(), &quot;Phone number&quot;)]'</span><span class="s2">)</span>
+    <span class="s0">phone_number_input_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'phone'</span><span class="s2">)</span>
+    <span class="s0">phone_number_next_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">CSS_SELECTOR</span><span class="s2">, </span><span class="s3">'.full'</span><span class="s2">)</span>
+    <span class="s0">get_enter_code_sms_text_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'code'</span><span class="s2">)</span>
+    <span class="s0">confirm_button_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//button[contains(text(),&quot;Confirm&quot;)]'</span><span class="s2">)</span>
+    <span class="s0">add_card_locator</span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//*[@id=&quot;root&quot;]/div/div[2]/div[2]/div[1]/div[2]/div[3]/div[2]'</span><span class="s2">)</span>
+    <span class="s0">card_number_input </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'number'</span><span class="s2">)</span>
+    <span class="s0">card_code_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//input[@class=&quot;card-input&quot; and @id=&quot;code&quot;]'</span><span class="s2">)</span>
+    <span class="s0">comment_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">ID</span><span class="s2">, </span><span class="s3">'comment'</span><span class="s2">)</span>
+    <span class="s0">blanket_and_handkerchiefs_locator </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'(//span[@class=&quot;slider round&quot;])[1]'</span><span class="s2">)</span>
+    <span class="s0">blanket_and_handkerchiefs_verification </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">CLASS_NAME</span><span class="s2">, </span><span class="s3">'switch-input'</span><span class="s2">)</span>
+    <span class="s0">add_ice_cream_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">CLASS_NAME</span><span class="s2">, </span><span class="s3">'counter-plus'</span><span class="s2">)</span>
+    <span class="s0">number_of_ice_creams </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@class=&quot;counter-value&quot;]'</span><span class="s2">)</span>
+    <span class="s0">phone_code </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">CLASS_NAME</span><span class="s2">,</span><span class="s3">'np-text'</span><span class="s2">)</span>
+    <span class="s0">payment_method_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@class=&quot;pp-button filled&quot;]//div[contains(text(), &quot;Payment method&quot;)]'</span><span class="s2">)</span>
+    <span class="s0">link_card_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//*[@id=&quot;root&quot;]/div/div[2]/div[2]/div[2]/form/div[3]/button[1]'</span><span class="s2">)</span>
+    <span class="s0">selected_payment_method </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@class=&quot;pp-value-text&quot;]'</span><span class="s2">)</span>
+    <span class="s0">close_card_button </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//div[@class=&quot;payment-picker open&quot;]//button[@class=&quot;close-button section-close&quot;]'</span><span class="s2">)</span>
+    <span class="s0">click_message_the_driver </span><span class="s2">= (</span><span class="s0">By</span><span class="s2">.</span><span class="s0">XPATH</span><span class="s2">, </span><span class="s3">'//*[@id=&quot;comment&quot;]'</span><span class="s2">)</span>
+
+
+
+
+
+
+    <span class="s1">def </span><span class="s0">__init__</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">driver</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver </span><span class="s2">= </span><span class="s0">driver</span>
+
+
+    <span class="s1">def </span><span class="s0">set_from</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">from_address</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">from_field</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">from_address</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">set_to</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">to_address</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">to_field</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">to_address</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">get_from</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">from_field</span><span class="s2">).</span><span class="s0">get_property</span><span class="s2">(</span><span class="s3">'value'</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">get_to</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">to_field</span><span class="s2">).</span><span class="s0">get_property</span><span class="s2">(</span><span class="s3">'value'</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">click_call_taxi_button</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">WebDriverWait</span><span class="s2">(</span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">, </span><span class="s4">3</span><span class="s2">).</span><span class="s0">until</span><span class="s2">(</span><span class="s0">expected_conditions</span><span class="s2">.</span><span class="s0">visibility_of_element_located</span><span class="s2">(</span><span class="s0">self</span><span class="s2">.</span><span class="s0">call_taxi_button</span><span class="s2">))</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">call_taxi_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">set_route</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">from_address</span><span class="s2">, </span><span class="s0">to_address</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">set_from</span><span class="s2">(</span><span class="s0">from_address</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">set_to</span><span class="s2">(</span><span class="s0">to_address</span><span class="s2">)</span>
+
+
+    <span class="s1">def </span><span class="s0">selective_supportive_plan</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">get_supportive_plan_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">get_supportive_class </span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">supportive_plan_card</span><span class="s2">).</span><span class="s0">get_attribute</span><span class="s2">(</span><span class="s3">&quot;class&quot;</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">add_ice_cream</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">amount</span><span class="s2">: </span><span class="s0">int</span><span class="s2">):</span>
+        <span class="s0">optional_add_controls </span><span class="s2">= </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_elements</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">add_ice_cream_button</span><span class="s2">)</span>
+        <span class="s1">for </span><span class="s0">count </span><span class="s1">in </span><span class="s0">range</span><span class="s2">(</span><span class="s0">amount</span><span class="s2">):</span>
+            <span class="s0">optional_add_controls</span><span class="s2">[</span><span class="s4">0</span><span class="s2">].</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">get_ice_cream_added_number</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">int</span><span class="s2">(</span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_elements</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">number_of_ice_creams</span><span class="s2">)[</span><span class="s4">0</span><span class="s2">].</span><span class="s0">text</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">fill_phone_number</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">pnumber</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">phone_number_button_locator</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">phone_number_input_locator</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">pnumber</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">phone_number_next_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+        <span class="s0">code </span><span class="s2">= </span><span class="s0">retrieve_phone_code</span><span class="s2">(</span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">get_enter_code_sms_text_locator</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">code</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">confirm_button_locator</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">get_phone</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">phone_code</span><span class="s2">).</span><span class="s0">text</span>
+
+    <span class="s1">def </span><span class="s0">select_plan</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">from_address</span><span class="s2">, </span><span class="s0">to_address</span><span class="s2">, </span><span class="s0">card_number</span><span class="s2">, </span><span class="s0">code</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">set_from</span><span class="s2">(</span><span class="s0">from_address</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">set_to</span><span class="s2">(</span><span class="s0">to_address</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">click_call_taxi_button</span><span class="s2">()</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">selective_supportive_plan</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">click_payment_method</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">payment_method_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">add_card_button</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">add_card_locator</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+
+    <span class="s1">def </span><span class="s0">add_card_number</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">card_number_text</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">card_number_input</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">card_number_text</span><span class="s2">)</span>
+
+
+    <span class="s1">def </span><span class="s0">add_code_number</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">code_number_text</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">card_code_locator</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">code_number_text</span><span class="s2">)</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">card_code_locator</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">Keys</span><span class="s2">.</span><span class="s0">TAB</span><span class="s2">)</span>
+
+
+    <span class="s1">def </span><span class="s0">click_link_card_button</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">link_card_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">click_close_payment_button</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">close_card_button</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+    <span class="s1">def </span><span class="s0">get_current_payment_method</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">selected_payment_method</span><span class="s2">).</span><span class="s0">text</span>
+
+
+    <span class="s1">def </span><span class="s0">click_message_to_the_driver</span><span class="s2">(</span><span class="s0">self</span><span class="s2">, </span><span class="s0">message_to_the_driver</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">click_message_the_driver</span><span class="s2">).</span><span class="s0">send_keys</span><span class="s2">(</span><span class="s0">message_to_the_driver</span><span class="s2">)</span>
+
+    <span class="s1">def </span><span class="s0">get_message_to_driver</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">click_message_the_driver</span><span class="s2">).</span><span class="s0">get_property</span><span class="s2">(</span><span class="s3">'value'</span><span class="s2">)</span>
+
+
+    <span class="s1">def </span><span class="s0">click_blanket_and_handkerchiefs_locator</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">blanket_and_handkerchiefs_locator</span><span class="s2">).</span><span class="s0">click</span><span class="s2">()</span>
+
+
+
+    <span class="s1">def </span><span class="s0">get_blanket_and_handkerchiefs_verification</span><span class="s2">(</span><span class="s0">self</span><span class="s2">):</span>
+        <span class="s1">return </span><span class="s0">self</span><span class="s2">.</span><span class="s0">driver</span><span class="s2">.</span><span class="s0">find_element</span><span class="s2">(*</span><span class="s0">self</span><span class="s2">.</span><span class="s0">blanket_and_handkerchiefs_verification</span><span class="s2">).</span><span class="s0">get_property</span><span class="s2">(</span><span class="s3">'checked'</span><span class="s2">)</span>
+
+
+
+
+
+</pre>
+</body>
+</html>
